@@ -85,6 +85,11 @@ application-manager:
                         annotations:
                           openshift.io/description: Ansible Automation Platform
                           openshift.io/display-name: Ansible Automation Platform
+                storage:
+                  name: aws-storage-classes
+                  path: charts/aws-storage-classes
+                  annotations:
+                    argocd.argoproj.io/sync-wave: "0"
                 # Operators App of App Chart
                 operators:
                   name: operators

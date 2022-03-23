@@ -1,0 +1,9 @@
+apiVersion: v2
+name: aws-storage-classes
+description: Additional Storage Classes for AWS Deployments
+type: application
+version: 0.1.0
+dependencies:
+  - name: common
+    version: 0.1.0
+    repository: file://../common
