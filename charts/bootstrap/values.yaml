@@ -201,3 +201,10 @@ application-manager:
                   annotations:
                     argocd.argoproj.io/sync-wave: "2"
                   destinationNamespace: open-cluster-management
+                # Ansible Automation Platform
+                aap:
+                  name: aap
+                  path: charts/ansible-automation-platform
+                  annotations:
+                    argocd.argoproj.io/sync-wave: "2"
+                  destinationNamespace: ansible-automation-platform

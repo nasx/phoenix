@@ -1,0 +1,18 @@
+---
+aap:
+  automationcontroller:
+    admin_user: admin
+    create_preload_data: true
+    garbage_collect_secrets: false
+    image_pull_policy: IfNotPresent
+    ingress_type: Route
+    name: automation-controller
+    projects_persistence: true
+    postgres_storage_class: gp3-csi
+    projects_storage_access_mode: ReadWriteOnce
+    projects_storage_class: gp3-csi
+    projects_storage_size: 8Gi
+    replicas: 2
+    route_tls_termination_mechanism: Edge
+    task_privileged: false
+  targetNamespace: ansible-automation-platform

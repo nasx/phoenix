@@ -1,0 +1,24 @@
+apiVersion: automationcontroller.ansible.com/v1beta1
+kind: AutomationController
+metadata:
+  labels:
+    {{- include "common.labels.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  name: {{ $.Values.aap.automationcontroller.name }}
+  namespace: {{ $.Values.aap.targetNamespace }}
+spec:
+  admin_user: {{ $.Values.aap.automationcontroller.admin_user }}
+  create_preload_data: {{ $.Values.aap.automationcontroller.create_preload_data }}
+  garbage_collect_secrets: {{ $.Values.aap.automationcontroller.garbage_collect_secrets }}
+  image_pull_policy: {{ $.Values.aap.automationcontroller.image_pull_policy }}
+  ingress_type: {{ $.Values.aap.automationcontroller.ingress_type }}
+  projects_persistence: {{ $.Values.aap.automationcontroller.projects_persistence }}
+  postgres_storage_class: {{ $.Values.aap.automationcontroller.postgres_storage_class }}
+  projects_storage_access_mode: {{ $.Values.aap.automationcontroller.projects_storage_access_mode }}
+  projects_storage_class: {{ $.Values.aap.automationcontroller.projects_storage_class }}
+  projects_storage_size: {{ $.Values.aap.automationcontroller.projects_storage_size }}
+  replicas: {{ $.Values.aap.automationcontroller.replicas }}
+  route_tls_termination_mechanism: {{ $.Values.aap.automationcontroller.route_tls_termination_mechanism }}
+  task_privileged: {{ $.Values.aap.automationcontroller.task_privileged }}
