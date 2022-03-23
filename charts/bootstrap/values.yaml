@@ -172,3 +172,27 @@ application-manager:
                             sourceNamespace: openshift-marketplace
                           operatorgroup:
                             create: true
+          # Umbrella App of Apps Chart
+          umbrella:
+            name: umbrella
+            path: charts/application-manager
+            destinationNamespace: umbrella-gitops
+            annotations:
+              argocd.argoproj.io/sync-wave: "1"
+            values:
+              common:
+                repoURL: https://github.com/nasx/phoenix.git
+                targetRevision: main
+                namespace: umbrella-gitops
+                project: umbrella-gitops
+                destinationNamespace: umbrella
+                prune: true
+                selfHeal: true
+              charts:
+                # Advanced Cluster Management
+                acm:
+                  name: acm
+                  path: charts/advanced-cluster-management
+                  annotations:
+                    argocd.argoproj.io/sync-wave: "2"
+                  destinationNamespace: open-cluster-management
