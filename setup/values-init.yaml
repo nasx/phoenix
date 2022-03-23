@@ -1,0 +1,22 @@
+---
+namespaces:
+  - name: umbrella-gitops
+    annotations:
+      openshift.io/description: Umbrella GitOps
+      openshift.io/display-name: Umbrella GitOps
+
+# OpenShift GitOps
+operator:
+  channel: stable
+  installPlanApproval: Automatic
+  name: openshift-gitops-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+config:
+  env:
+    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+      value: "true"
+    - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+      value: "umbrella-gitops"
+operatorgroup:
+  create: false

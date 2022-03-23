@@ -1,0 +1,159 @@
+---
+argocd:
+  appProjects:
+    - name: umbrella-gitops
+
+bootstrap:
+  raw: []
+
+namespace:
+  namespaces:
+    - name: umbrella
+      annotations:
+        openshift.io/description: Umbrella Application Namespace
+        openshift.io/display-name: Umbrella Application Namespace
+
+# Dynamically Generated Charts
+application-manager:
+  common:
+    repoURL: https://github.com/nasx/phoenix.git
+    targetRevision: main
+    namespace: umbrella-gitops
+    project: umbrella-gitops
+    destinationNamespace: umbrella
+    prune: true
+    selfHeal: true
+  charts:
+    # Top Level Nested App of Apps Chart
+    umbrella-automation:
+      name: umbrella-automation
+      path: charts/application-manager
+      values:
+        common:
+          repoURL: https://github.com/nasx/phoenix.git
+          targetRevision: main
+          namespace: umbrella-gitops
+          project: umbrella-gitops
+          destinationNamespace: umbrella
+          prune: true
+          selfHeal: true
+        charts:
+          # Cluster Configuration App of Apps Chart
+          cluster-configs:
+            name: cluster-configs
+            path: charts/application-manager
+            annotations:
+              argocd.argoproj.io/sync-wave: "0"
+            destinationNamespace: umbrella-gitops
+            values:
+              common:
+                repoURL: https://github.com/nasx/phoenix.git
+                targetRevision: main
+                namespace: umbrella-gitops
+                project: umbrella-gitops
+                destinationNamespace: umbrella-gitops
+                prune: true
+                selfHeal: true
+              charts:
+                # Create namespaces
+                namespaces:
+                  name: namespaces
+                  path: charts/namespaces
+                  annotations:
+                    argocd.argoproj.io/sync-wave: "0"
+                  values:
+                    namespaces:
+                      - name: openshift-storage
+                        annotations:
+                          openshift.io/description: OpenShift Data Foundation
+                          openshift.io/display-name: OpenShift Data Foundation
+                        labels:
+                          openshift.io/cluster-monitoring: "true"
+                      - name: openshift-pipelines
+                        annotations:
+                          openshift.io/description: OpenShift Pipelines
+                          openshift.io/display-name: OpenShift Pipelines
+                      - name: open-cluster-management
+                        annotations:
+                          openshift.io/description: Advanced Cluster Management
+                          openshift.io/display-name: Advanced Cluster Management
+                      - name: open-cluster-management-observability
+                        annotations:
+                          openshift.io/description: Advanced Cluster Management Observability
+                          openshift.io/display-name: Advanced Cluster Management Observability
+                      - name: ansible-automation-platform
+                        annotations:
+                          openshift.io/description: Ansible Automation Platform
+                          openshift.io/display-name: Ansible Automation Platform
+                # Operators App of App Chart
+                operators:
+                  name: operators
+                  path: charts/application-manager
+                  values:
+                    common:
+                      repoURL: https://github.com/nasx/phoenix.git
+                      targetRevision: main
+                      namespace: umbrella-gitops
+                      project: umbrella-gitops
+                      destinationNamespace: openshift-operators
+                      prune: true
+                      selfHeal: true
+                    charts:
+                      # Operator List
+                      odf-operator:
+                        name: odf-operator
+                        path: charts/operator
+                        annotations:
+                          argocd.argoproj.io/sync-wave: "0"
+                        destinationNamespace: openshift-storage
+                        values:
+                          operator:
+                            channel: stable-4.9
+                            installPlanApproval: Automatic
+                            name: odf-operator
+                            source: redhat-operators
+                            sourceNamespace: openshift-marketplace
+                      pipelines-operator:
+                        name: pipelines-operator
+                        path: charts/operator
+                        annotations:
+                          argocd.argoproj.io/sync-wave: "0"
+                        values:
+                          operator:
+                            channel: stable
+                            installPlanApproval: Automatic
+                            name: openshift-pipelines-operator-rh
+                            source: redhat-operators
+                            sourceNamespace: openshift-marketplace
+                          operatorgroup:
+                            create: false
+                      quay-operator:
+                        name: quay-operator
+                        path: charts/operator
+                        annotations:
+                          argocd.argoproj.io/sync-wave: "0"
+                        values:
+                          operator:
+                            channel: stable-3.6
+                            installPlanApproval: Automatic
+                            name: quay-operator
+                            source: redhat-operators
+                            sourceNamespace: openshift-marketplace
+                          operatorgroup:
+                            create: false
+                      aap-operator:
+                        name: aap-operator
+                        path: charts/operator
+                        annotations:
+                          argocd.argoproj.io/sync-wave: "0"
+                        destinationNamespace: ansible-automation-platform
+                        values:
+                          operator:
+                            channel: stable-2.1-cluster-scoped
+                            installPlanApproval: Automatic
+                            name: ansible-automation-platform-operator
+                            source: redhat-operators
+                            sourceNamespace: openshift-marketplace
+                          operatorgroup:
+                            create: true
+                            clusterScope: true
