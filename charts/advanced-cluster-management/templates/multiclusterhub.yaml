@@ -1,0 +1,12 @@
+apiVersion: operator.open-cluster-management.io/v1
+kind: MultiClusterHub
+metadata:
+  name: {{ $.Values.acm.multiclusterhub.name }}
+  namespace: {{ $.Values.acm.targetNamespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  availabilityConfig: {{ $.Values.acm.multiclusterhub.availabilityConfig }}
+  imagePullSecret: {{ $.Values.acm.multiclusterhub.imagePullSecret }}

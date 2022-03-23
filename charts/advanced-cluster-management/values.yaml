@@ -1,0 +1,7 @@
+---
+acm:
+  multiclusterhub:
+    name: umbrella-hub
+    availabilityConfig: High
+    imagePullSecret: redhat-pull-secret
+  targetNamespace: open-cluster-management  

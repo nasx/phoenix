@@ -157,3 +157,18 @@ application-manager:
                           operatorgroup:
                             create: true
                             clusterScope: true
+                      acm-operator:
+                        name: acm-operator
+                        path: charts/operator
+                        annotations:
+                          argocd.argoproj.io/sync-wave: "0"
+                        destinationNamespace: open-cluster-management
+                        values:
+                          operator:
+                            channel: release-2.4
+                            installPlanApproval: Automatic
+                            name: advanced-cluster-management
+                            source: redhat-operators
+                            sourceNamespace: openshift-marketplace
+                          operatorgroup:
+                            create: true
