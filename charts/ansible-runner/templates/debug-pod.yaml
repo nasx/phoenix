@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: ansible
-      image: image-registry.openshift-image-registry.svc:5000/ansible-runner/ansible-runner:latest
+      image: image-registry.openshift-image-registry.svc:5000/umbrella/ansible-runner:latest
       command:
         - /bin/bash
         - -c
