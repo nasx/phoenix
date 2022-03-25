@@ -1,0 +1,62 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    {{- include "common.labels.labels" . | nindent 4 }}
+  name: ansible-runner-clusterrole
+  namespace: {{ template "common.names.namespace" $ }}
+rules:
+  - apiGroups:
+      - "*"
+    resources:
+      - pods
+      - services
+      - secrets
+      - configmaps
+    verbs:
+      - "*"
+  - apiGroups:
+      - observability.open-cluster-management.io
+    resources:
+      - multiclusterobservabilities
+    verbs:
+      - "*"
+  - apiGroups:
+      - operator.open-cluster-management.io
+    resources:
+      - multiclusterhubs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+      - extensions
+    resources:
+      - deployments
+    verbs:
+      - list
+      - get
+      - watch
+      - update
+      - patch
+  - apiGroups:
+      - config.openshift.io
+    resources:
+      - infrastructures
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - machine.openshift.io
+    resources:
+      - machinesets
+    verbs:
+      - "*"
+  - apiGroups:
+      - objectbucket.io
+    resources:
+      - objectbucketclaims
+    verbs:
+      - "*"
