@@ -208,3 +208,10 @@ application-manager:
                   annotations:
                     argocd.argoproj.io/sync-wave: "2"
                   destinationNamespace: ansible-automation-platform
+                # Ansible Runner
+                ansible-runner:
+                  name: ansible-runner
+                  path: charts/ansible-runner
+                  annotations:
+                    argocd.argoproj.io/sync-wave: "0"
+                  destinationNamespace: umbrella

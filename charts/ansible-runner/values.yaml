@@ -1,0 +1,7 @@
+---
+ansible_runner:
+  image:
+    imagePullPolicy: IfNotPresent
+    registry: registry.access.redhat.com
+    repository: ubi8/python-38
+    version: latest
