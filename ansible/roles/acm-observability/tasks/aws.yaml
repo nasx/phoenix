@@ -1,0 +1,27 @@
+- name: Query ACM Observability S3 Credentials
+  kubernetes.core.k8s_info:
+    api_key: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+    api_version: v1
+    ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    host: https://kubernetes.default.svc
+    kind: Secret
+    name: "{{ aws_credential_request_name }}"
+    namespace: "{{ aws_credential_request_namespace }}"
+  register: aws_credential_request
+
+- name: Create S3 Bucket
+  amazon.aws.s3_bucket:
+    aws_access_key: "{{ aws_credential_request.resources[0].data.aws_access_key_id | b64decode }}"
+    aws_secret_key: "{{ aws_credential_request.resources[0].data.aws_secret_access_key | b64decode }}"
+    delete_public_access: yes
+    name: "{{ aws_bucket_name }}"
+    state: present
+  register: aws_s3_bucket
+
+- name: Create ACM Observability Thanos Config
+  kubernetes.core.k8s:
+    api_key: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+    ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    definition: "{{ lookup('template', 'templates/thanos-secret-aws.j2') | from_yaml }}"
+    host: https://kubernetes.default.svc
+    state: present

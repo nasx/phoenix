@@ -1,0 +1,50 @@
+- name: Wait for ACM Operator
+  kubernetes.core.k8s_info:
+    api_key: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+    api_version: v1
+    ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    host: https://kubernetes.default.svc
+    kind: Pod
+    namespace: "{{ acm_hub_namespace }}"
+    label_selectors:
+      - name=multiclusterhub-operator
+  register: pod
+  retries: 60
+  delay: 10
+  until:
+    - pod.resources[0].status.phase
+    - pod.resources[0].status.phase == "Running"
+
+- name: Query ACM Pull Secret
+  kubernetes.core.k8s_info:
+    api_key: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+    api_version: v1
+    ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    host: https://kubernetes.default.svc
+    kind: Secret
+    name: "{{ acm_pull_secret }}"
+    namespace: "{{ acm_hub_namespace }}"
+  register: secret
+
+- name: Create ACM Observability Pull Secret
+  kubernetes.core.k8s:
+    api_key: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+    ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    host: https://kubernetes.default.svc
+    state: present
+    namespace: "{{ acm_observability_namespace }}"
+    resource_definition:
+      apiVersion: v1
+      data:
+        .dockerconfigjson: "{{ secret.resources[0].data['.dockerconfigjson'] }}"
+      kind: Secret
+      metadata:
+        name: "{{ acm_pull_secret }}"
+        namespace: "{{ acm_observability_namespace }}"
+      type: kubernetes.io/dockerconfigjson
+
+- name: Deploy on AWS
+  ansible.builtin.include_tasks:
+    file: aws.yaml
+  when:
+    - acm_observability_target == "aws"

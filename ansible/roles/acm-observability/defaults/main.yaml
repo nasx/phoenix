@@ -1,0 +1,6 @@
+acm_hub_namespace: open-cluster-management
+acm_hub_name: umbrella-hub
+acm_observability_namespace: open-cluster-management-observability
+acm_observability_name: umbrella-observability
+acm_observability_storage_class: gp3-csi
+acm_pull_secret: redhat-pull-secret
