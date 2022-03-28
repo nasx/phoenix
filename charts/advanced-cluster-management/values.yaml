@@ -4,10 +4,18 @@ acm:
     name: umbrella-hub
     availabilityConfig: High
     imagePullSecret: redhat-pull-secret
+  pullSecretJob:
+    annotations:
+      argocd.argoproj.io/hook: PreSync
+      argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    serviceAccount: ansible-runner-sa
+    imagePullPolicy: Always
+    name: acm-pull-secret-job
   targetNamespace: open-cluster-management
 
 observability:
   deploy: true
+  name: umbrella-observability
   thanos:
     aws:
       bucketName: umbrella-observability-bucket
@@ -21,4 +29,5 @@ observability:
     gitBranch: main
     namespace: umbrella
     serviceAccount: ansible-runner-sa
+  storageClass: gp3-csi
   targetNamespace: open-cluster-management-observability
