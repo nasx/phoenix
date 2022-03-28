@@ -11,6 +11,7 @@ acm:
     serviceAccount: ansible-runner-sa
     imagePullPolicy: Always
     name: acm-pull-secret-job
+    namespace: umbrella
   targetNamespace: open-cluster-management
 
 observability:

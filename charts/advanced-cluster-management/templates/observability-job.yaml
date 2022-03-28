@@ -1,0 +1,80 @@
+{{- if and $.Values.observability.deploy (hasKey $.Values.observability.thanos "aws") -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    {{- include "common.labels.labels" . | nindent 4 }}
+    run: observability-ansible-job
+  annotations:
+    {{- toYaml .Values.setupJob.annotations | nindent 4 }}
+  name: observability-ansible-job
+  namespace: {{ $.Values.observability.setupJob.namespace }}
+spec:
+  template:
+    spec:
+      activeDeadlineSeconds: 600
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/umbrella/ansible-runner:latest
+          env:
+            - name: GIT_DIRECTORY
+              value: "/tmp/git/phoenix"
+            - name: GIT_URL
+              value: {{ $.Values.observability.setupJob.gitRepository }}
+            - name: GIT_BRANCH
+              value: {{ $.Values.observability.setupJob.gitBranch }}
+            - name: ANSIBLE_PLAYBOOK
+              value: "ansible/playbooks/acm-observability.yaml"
+            - name: ANSIBLE_CONFIG
+              value: $GIT_DIRECTORY/ansible/ansible.cfg
+{{- if (hasKey $.Values.observability.thanos "aws") -}}
+            - name: AWS_BUCKET_NAME
+              value: {{ $.Values.observability.thanos.aws.bucketName | quote }}
+            - name: AWS_CREDENTIAL_REQUEST_NAME
+              value: {{ $.Values.observability.thanos.aws.credentialRequestName | quote }}
+            - name: AWS_CREDENTIAL_REQUEST_NAMESPACE
+              value: {{ $.Values.observability.thanos.aws.credentialReuqestNamespace | quote }}
+            - name: ACM_HUB_NAMESPACE
+              value: {{ $.Values.acm.targetNamespace | quote }}
+            - name: ACM_HUB_NAME
+              value: {{ $.Values.acm.multiclusterhub.name | quote }}
+            - name: ACM_OBSERVABILITY_NAMESPACE
+              value: {{ $.Values.acm.observability.targetNamespace | quote }}
+            - name: ACM_OBSERVABILITY_NAME
+              value: {{ $.Values.acm.observability.name | quote }}
+            - name: ACM_OBSERVABILITY_STORAGE_CLASS
+              value: {{ $.Values.acm.observability.storageClass | quote }}
+            - name: ACM_PULL_SECRET
+              value: {{ $.Values.acm.multiclusterhub.imagePullSecret | quote }}
+            - name: ACM_OBSERVABILITY_PLATFORM
+              value: aws
+{{- end -}}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              mkdir -p $GIT_DIRECTORY
+              git clone -b $GIT_BRANCH $GIT_URL $GIT_DIRECTORY
+              ansible-galaxy collection install -r $GIT_DIRECTORY/ansible/collections/requirements.yaml
+{{- if (hasKey $.Values.observability.thanos "aws") -}}
+              ansible-playbook $GIT_DIRECTORY/$ANSIBLE_PLAYBOOK \
+                -e acm_observability_target=aws \
+                -e aws_bucket_name=$AWS_BUCKET_NAME \
+                -e aws_credential_request_name=$AWS_CREDENTIAL_REQUEST_NAME \
+                -e aws_credential_request_namespace=$AWS_CREDENTIAL_REQUEST_NAMESPACE \
+                -e acm_hub_namespace=$ACM_HUB_NAMESPACE \
+                -e acm_hub_name=$ACM_HUB_NAME \
+                -e acm_observability_namespace=$ACM_OBSERVABILITY_NAMESPACE \
+                -e acm_observability_name=$ACM_OBSERVABILITY_NAME \
+                -e acm_observability_storage_class=$ACM_OBSERVABILITY_STORAGE_CLASS \
+                -e acm_pull_secret=$ACM_PULL_SECRET \
+{{- else -}}
+              ansible-playbook $GIT_DIRECTORY/$ANSIBLE_PLAYBOOK
+{{- end -}}
+          imagePullPolicy: Always
+          name: ansible-runner
+      dnsPolicy: ClusterFirst
+      restartPolicy: OnFailure
+      serviceAccount: {{ $.Values.observability.setupJob.serviceAccount }}
+      serviceAccountName: {{ $.Values.observability.setupJob.serviceAccount }}
+      terminationGracePeriodSeconds: 30
+{{- end -}}
