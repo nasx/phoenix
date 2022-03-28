@@ -15,6 +15,7 @@ acm:
   targetNamespace: open-cluster-management
   observability:
     deploy: true
+    target: aws
     name: umbrella-observability
     thanos:
       aws:

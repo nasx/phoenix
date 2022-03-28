@@ -1,4 +1,4 @@
-{{- if and $.Values.acm.observability.deploy (hasKey $.Values.acm.observability.thanos "aws") -}}
+{{- if $.Values.acm.observability.deploy -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -26,13 +26,13 @@ spec:
               value: "ansible/playbooks/acm-observability.yaml"
             - name: ANSIBLE_CONFIG
               value: $GIT_DIRECTORY/ansible/ansible.cfg
-{{- if (hasKey $.Values.acm.observability.thanos "aws") -}}
+{{- if eq $.Values.acm.observability.target "aws" }}
             - name: AWS_BUCKET_NAME
               value: {{ $.Values.acm.observability.thanos.aws.bucketName | quote }}
             - name: AWS_CREDENTIAL_REQUEST_NAME
               value: {{ $.Values.acm.observability.thanos.aws.credentialRequestName | quote }}
             - name: AWS_CREDENTIAL_REQUEST_NAMESPACE
-              value: {{ $.Values.acm.observability.thanos.aws.credentialReuqestNamespace | quote }}
+              value: {{ $.Values.acm.observability.thanos.aws.credentialRequestNamespace | quote }}
             - name: ACM_HUB_NAMESPACE
               value: {{ $.Values.acm.targetNamespace | quote }}
             - name: ACM_HUB_NAME
@@ -47,7 +47,7 @@ spec:
               value: {{ $.Values.acm.multiclusterhub.imagePullSecret | quote }}
             - name: ACM_OBSERVABILITY_PLATFORM
               value: aws
-{{- end -}}
+{{- end }}
           command:
             - /bin/bash
             - -c
@@ -55,7 +55,7 @@ spec:
               mkdir -p $GIT_DIRECTORY
               git clone -b $GIT_BRANCH $GIT_URL $GIT_DIRECTORY
               ansible-galaxy collection install -r $GIT_DIRECTORY/ansible/collections/requirements.yaml
-{{- if (hasKey $.Values.acm.observability.thanos "aws") -}}
+{{- if (hasKey $.Values.acm.observability.thanos "aws") }}
               ansible-playbook $GIT_DIRECTORY/$ANSIBLE_PLAYBOOK \
                 -e acm_observability_target=aws \
                 -e aws_bucket_name=$AWS_BUCKET_NAME \
@@ -66,10 +66,10 @@ spec:
                 -e acm_observability_namespace=$ACM_OBSERVABILITY_NAMESPACE \
                 -e acm_observability_name=$ACM_OBSERVABILITY_NAME \
                 -e acm_observability_storage_class=$ACM_OBSERVABILITY_STORAGE_CLASS \
-                -e acm_pull_secret=$ACM_PULL_SECRET \
-{{- else -}}
+                -e acm_pull_secret=$ACM_PULL_SECRET
+{{- else }}
               ansible-playbook $GIT_DIRECTORY/$ANSIBLE_PLAYBOOK
-{{- end -}}
+{{- end }}
           imagePullPolicy: Always
           name: ansible-runner
       dnsPolicy: ClusterFirst
