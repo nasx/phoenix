@@ -191,7 +191,7 @@ application-manager:
                 namespace: umbrella-gitops
                 project: umbrella-gitops
                 destinationNamespace: umbrella
-                prune: true
+                prune: false
                 selfHeal: true
               charts:
                 # Advanced Cluster Management
@@ -200,6 +200,7 @@ application-manager:
                   path: charts/advanced-cluster-management
                   annotations:
                     argocd.argoproj.io/sync-wave: "2"
+                    argocd.argoproj.io/sync-options: Prune=false
                   destinationNamespace: open-cluster-management
                 # Ansible Automation Platform
                 aap:

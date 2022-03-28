@@ -1,7 +1,8 @@
-apiVersion: observability.open-cluster-management.io/v1beta1
+apiVersion: observability.open-cluster-management.io/v1beta2
 kind: MultiClusterObservability
 metadata:
   name: {{ acm_observability_name }}
+  namespace: {{ acm_observability_namespace }}
 spec:
   availabilityConfig: High
   enableDownSampling: false
