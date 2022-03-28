@@ -13,22 +13,21 @@ acm:
     name: acm-pull-secret-job
     namespace: umbrella
   targetNamespace: open-cluster-management
-
-observability:
-  deploy: true
-  name: umbrella-observability
-  thanos:
-    aws:
-      bucketName: umbrella-observability-bucket
-      credentialRequestName: umbrella-s3-credentials
-      credentialRequestNamespace: umbrella
-  setupJob:
-    annotations:
-      argocd.argoproj.io/hook: PostSync
-      argocd.argoproj.io/hook-delete-policy: HookSucceeded
-    gitRepository: https://github.com/nasx/phoenix.git
-    gitBranch: main
-    namespace: umbrella
-    serviceAccount: ansible-runner-sa
-  storageClass: gp3-csi
-  targetNamespace: open-cluster-management-observability
+  observability:
+    deploy: true
+    name: umbrella-observability
+    thanos:
+      aws:
+        bucketName: umbrella-observability-bucket
+        credentialRequestName: umbrella-s3-credentials
+        credentialRequestNamespace: umbrella
+    setupJob:
+      annotations:
+        argocd.argoproj.io/hook: PostSync
+        argocd.argoproj.io/hook-delete-policy: HookSucceeded
+      gitRepository: https://github.com/nasx/phoenix.git
+      gitBranch: main
+      namespace: umbrella
+      serviceAccount: ansible-runner-sa
+    storageClass: gp3-csi
+    targetNamespace: open-cluster-management-observability
