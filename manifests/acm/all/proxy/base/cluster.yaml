@@ -68,7 +68,7 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
-          name: cluster-proxy-config
+          name: proxy-cluster
         spec:
           object-templates:
             - complianceType: musthave
