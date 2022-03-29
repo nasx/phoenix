@@ -1,0 +1,20 @@
+apiVersion: operator.openshift.io/v1
+kind: DNS
+metadata:
+  name: default
+spec:
+  logLevel: Normal
+  nodePlacement: {}
+  operatorLogLevel: Normal
+  servers:
+  - name: umbrella-lab
+    zones:
+      - lab.uc2.io
+    forwardPlugin:
+      upstreams: 
+        - 172.16.10.2
+  upstreamResolvers:
+    policy: Sequential
+    upstreams:
+    - port: 53
+      type: SystemResolvConf
