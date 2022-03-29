@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - big-bang-application.yaml
+  - big-bang-placement-rule.yaml
   - big-bang-subscription.yaml
   - umbrella-gitops-channel.yaml
   - umbrella-gitops-namespace.yaml

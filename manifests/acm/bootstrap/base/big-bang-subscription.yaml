@@ -12,4 +12,6 @@ metadata:
 spec:
   channel: umbrella-gitops/umbrella-gitops
   placement:
-    local: true
+    placementRef:
+      name: big-bang-placement-rule
+      kind: PlacementRule
