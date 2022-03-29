@@ -1,20 +1,58 @@
-apiVersion: operator.openshift.io/v1
-kind: DNS
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
 metadata:
-  name: default
+  name: dns-default-policy
+  namespace: umbrella-gitops
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
 spec:
-  logLevel: Normal
-  nodePlacement: {}
-  operatorLogLevel: Normal
-  servers:
-  - name: umbrella-lab
-    zones:
-      - lab.uc2.io
-    forwardPlugin:
-      upstreams: 
-        - 172.16.10.2
-  upstreamResolvers:
-    policy: Sequential
-    upstreams:
-    - port: 53
-      type: SystemResolvConf
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: upgrade-cluster
+        spec:
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operator.openshift.io/v1
+                kind: DNS
+                metadata:
+                  name: default
+                spec:
+                  logLevel: Normal
+                  nodePlacement: {}
+                  operatorLogLevel: Normal
+                  servers:
+                  - name: umbrella-lab
+                    zones:
+                      - lab.uc2.io
+                    forwardPlugin:
+                      upstreams: 
+                        - 172.16.10.2
+                  upstreamResolvers:
+                    policy: Sequential
+                    upstreams:
+                    - port: 53
+                      type: SystemResolvConf
+              remediationAction: enforce
+          severity: high
+  remediationAction: enforce
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: dns-default-policy-binding
+  namespace: umbrella-gitops
+placementRef:
+  name: openshift-all-placement-rule
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: dns-default-policy
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
