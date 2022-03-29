@@ -10,4 +10,6 @@ metadata:
 spec:
   channel: umbrella-gitops/umbrella-gitops
   placement:
-    local: true
+    placementRef:
+      name: openshift-all-placement-rule
+      kind: PlacementRule
