@@ -11,5 +11,5 @@ spec:
   channel: umbrella-gitops/umbrella-gitops
   placement:
     placementRef:
-      name: cluster-placement-rule-temple
+      name: big-bang-placement-rule
       kind: PlacementRule
