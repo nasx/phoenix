@@ -5,5 +5,7 @@ resources:
   - big-bang-application.yaml
   - big-bang-placement-rule.yaml
   - big-bang-subscription.yaml
+  - subscription-admin-clusterrole.yaml
+  - subscription-admin-clusterrolebinding.yaml
   - umbrella-gitops-channel.yaml
   - umbrella-gitops-namespace.yaml
