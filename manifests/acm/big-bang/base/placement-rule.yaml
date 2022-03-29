@@ -1,7 +1,7 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: openshift-placement-rule
+  name: openshift-all-placement-rule
   namespace: umbrella-gitops
 spec:
   clusterConditions:
