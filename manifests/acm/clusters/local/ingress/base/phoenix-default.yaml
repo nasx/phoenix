@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: elite-python-ingress-controller
+  name: phoenix-ingress-controller
   annotations:
     policy.open-cluster-management.io/standards: NIST SP 800-53
     policy.open-cluster-management.io/categories: CM Configuration Management
@@ -61,3 +61,17 @@ spec:
                 replicas: 3
                 tuningOptions: {}
                 unsupportedConfigOverrides: null
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: phoenix-ingress-controller
+  namespace: umbrella-gitops
+placementRef:
+  name: big-bang-placement-rule
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: phoenix-ingress-controller
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
