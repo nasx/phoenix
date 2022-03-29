@@ -1,0 +1,15 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: cluster-placement-rule-temple
+  namespace: umbrella-gitops
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: name
+        operator: In
+        values: 
+          - temple
