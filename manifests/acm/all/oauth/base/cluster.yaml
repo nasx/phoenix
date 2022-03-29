@@ -1,0 +1,169 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: elite-python-oauth
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: oauth-ldap-ca-config-map
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: oauth-ldap-ca-config-map
+                namespace: openshift-config
+              data:
+                ca.crt: |
+                  -----BEGIN CERTIFICATE-----
+                  MIIGMzCCBBugAwIBAgIBADANBgkqhkiG9w0BAQ0FADBvMRkwFwYDVQQDExB1bWJy
+                  ZWxsYS1yb290LWNhMQswCQYDVQQGEwJVUzERMA8GA1UECBMIVmlyZ2luaWExFTAT
+                  BgNVBAcTDFJhY2Nvb24gQ2l0eTENMAsGA1UEChMETGFiczEMMAoGA1UECxMDUEtJ
+                  MB4XDTIwMDcxMzIzNDM0OVoXDTMwMDcxMTIzNDM0OVowbzEZMBcGA1UEAxMQdW1i
+                  cmVsbGEtcm9vdC1jYTELMAkGA1UEBhMCVVMxETAPBgNVBAgTCFZpcmdpbmlhMRUw
+                  EwYDVQQHEwxSYWNjb29uIENpdHkxDTALBgNVBAoTBExhYnMxDDAKBgNVBAsTA1BL
+                  STCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAOJ+Xpd3hIckcZ+oweU5
+                  BGMC1FC4lKN+hUua4wzHavy7oC3bwUju76hxpr3lyYm3cYbi8wMiO2P33xe3BUd0
+                  S8AFl2RLgHDfIFLf7ZIiK82iOqWAf1rN9tOEUechkycyn67bfRmBEksilILWvxdM
+                  ecYHtMiDAQ1aY9rlTvao4fG94vO38CiMj1uEt2bYcJHHLrNxilJrc5GmW/u0Ippw
+                  gMI/YMos814q8Ynlm8a7FdKGyvWryJIto3wlKAsgkV8Oz2ncf4nEvil5peBTURfK
+                  7Z0q6nvMLsWmARLOT0lj4RulEC2NFlTeMrlX1lOnB8kj4vDFYHIKZfXKgKJCZJzA
+                  e1M0C+daGX8yNF685601F+NEJjLoQcpUVzomz/ShlSMrYKM+LGrgP76bogNnMnTM
+                  aMR2z9Qm0u25sPIL/NuAQVa23u4m9zX3eraqKxg0/x6HykPfaZvemsBX6jAEUK23
+                  RDJXMBMeu3vdm7Fx1FpdA21VNSFDTWBqPksgFiieW0dwga5JPhYisgTh+cZartT6
+                  q3PS4FY32OJG04odCJQmnrB5Bbltr0q/+/bKcMCU7U3DPu4pMacSjxWsvEkM1kYj
+                  0Ejd6Hhuin49QKxbQVHE3jasHfTe0oY7fErmrZI6a67M1UuaiBA30ajNSwb9ANC3
+                  0P8ufUuq8JUgJE09Et7LhkbdAgMBAAGjgdkwgdYwHQYDVR0OBBYEFGHxRMLRSt+4
+                  A1JebS1odxJnUvzDMIGZBgNVHSMEgZEwgY6AFGHxRMLRSt+4A1JebS1odxJnUvzD
+                  oXOkcTBvMRkwFwYDVQQDExB1bWJyZWxsYS1yb290LWNhMQswCQYDVQQGEwJVUzER
+                  MA8GA1UECBMIVmlyZ2luaWExFTATBgNVBAcTDFJhY2Nvb24gQ2l0eTENMAsGA1UE
+                  ChMETGFiczEMMAoGA1UECxMDUEtJggEAMAwGA1UdEwQFMAMBAf8wCwYDVR0PBAQD
+                  AgEGMA0GCSqGSIb3DQEBDQUAA4ICAQBvcj+JqSwlg+QciYIglLiUxeAVNhUdMnnP
+                  tk7A88shWR7CFSN1yqeFkyGIHYMWLmlIrOAbBwCJPXp9xTVjkJQHe9lo18kJUVfj
+                  cxMkeEg3zrVfMHoHf1bWdN7kv75Ew0ViHcUKG2o13XElY6PR6DacNjZeDEm4LCOR
+                  GoGVteuU5bPnAVT96QKMecJaG0b+0Y595KOtq2OONYYtPXQZ+hHIemyQdkgEG+aM
+                  lUTngrJEIfG4m853M84uGl68MxhxILsAQMH3Be/o5+3rVNn/Gy3yfUiItI2JbXj3
+                  VZi2GLSbyPRnWLRKAjpbo0u+rl7r7NdGO5qw4yDBzd7a9PwskVdcsHM17Dn0W07r
+                  LjlUW3eHbO0/ek4B+qlZWSTOg73jKrQcYagOL3+/bq+kR1heRJ07irsRaD65RvYu
+                  XI6V2TolTtWWNLxakYq9Xcio3d4LAwgXaSfAPEBY99+6G/cIR9LiN0nxtI0AyPMC
+                  lB268WTR2o1V5M5u0KDl3LLliTX6+faFYPSK7lzNMLVG/AjHPTAR9Tckd4fBYolw
+                  CVGbFGynOuAmtSsiPeAHaarvndbCo/ucsQ8dJLy/Pxe/bIJH8K16CbkUJBI7uKsw
+                  +NPjvtiRT2yOnYHOtOF9h2UkuC0fwwdmfonqj2DCCdqF+rbO3gXDZExE2+CtE4Xi
+                  MBHbJ+an3A==
+                  -----END CERTIFICATE-----
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: cluster-admins-group
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: user.openshift.io/v1
+              kind: Group
+              metadata:
+                name: cluster-admins
+              users:
+                - chris
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: cluster-admins-group-rolebinding
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRoleBinding
+              metadata:
+                name: cluster-admin-users
+              roleRef:
+                apiGroup: rbac.authorization.k8s.io
+                kind: ClusterRole
+                name: cluster-admin
+              subjects:
+                - apiGroup: rbac.authorization.k8s.io
+                  kind: Group
+                  name: cluster-admins
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: oauth-cluster
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: config.openshift.io/v1
+              kind: OAuth
+              metadata:
+                name: cluster
+              spec:
+                identityProviders:
+                - ldap:
+                    attributes:
+                      email:
+                      - mail
+                      id:
+                      - dn
+                      name:
+                      - cn
+                      preferredUsername:
+                      - uid
+                    bindDN: uid=ocp-service-account,cn=users,cn=accounts,dc=lab,dc=uc2,dc=io
+                    bindPassword:
+                      name: oauth-ldap-bind-secret
+                    ca:
+                      name: oauth-ldap-ca-config-map
+                    insecure: false
+                    url: ldap://idm1.lab.uc2.io/cn=users,cn=accounts,dc=lab,dc=uc2,dc=io?uid
+                  mappingMethod: claim
+                  name: idm.lab.uc2.io
+                  type: LDAP
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: oauth-ldap-bind-secret
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              kind: SealedSecret
+              apiVersion: bitnami.com/v1alpha1
+              metadata:
+                name: oauth-ldap-bind-secret
+                namespace: openshift-config
+                creationTimestamp: null
+              spec:
+                template:
+                  metadata:
+                    name: oauth-ldap-bind-secret
+                    namespace: openshift-config
+                    creationTimestamp: null
+                  type: Opaque
+                encryptedData:
+                  bindPassword: AgCYIH9bdTbF/Ti6O5AXoD70D8ZL7ZY4SehAEj5I7rmEpcNVYM4Dy2La2qDOuuS2vp0thHQtm4RFU3f9Hz9Z4Wwg5KmnUplbNucauM9klIcZlyxe6N8Wuuuh1VIUrPVoWcNSj+ShOQdf2axIHjcJTeMm5MtzEPuRQ7rhMxIEQZkVDtz9zVXCy8CtSGdDWS1Y4LUXXk3JkU8GlkR7X7tWFvqc6HNvtTF7dznDWMtXlCCMmRX7Di0uEGPNeLGhxX07/It1PWl+YRg4yg2lhyzg997+KI/MWEsgAWO5CxkO5TwDTYLRGrsPbtltjCKeuStVMBqzqtBBdTFeKDTmMHkU+nzkcoSzRjRYD1AMu3MH/MxWqVb/pMFT1J0indwnl67lKaVYPWo/dr/eBuRf35wcRH26sCoCKArLAg1RHMTAcPL4qxl/v82i4Jt1ZF54JxjT0xjrXs8/Ri4ptWhw1XKZ5VrfseRy14wNLemFh3URqKubLbZ0u0fC+ApW6tdOR28t93aslztRTDJoT7et1ilbLw/vT0e8jzvlkSaM2v4N4ynh6CJH/2KUySiR57OXak/8L9wIGjcLGA3Z9jrCeX08cP0Zm+9x4uWi0jRr/LFQsjxxlbi3Hwn4WmvaT6EkKCvbn49hw+NP1ulkwHsY0LR+KmyHpScmw9yNmmOuNuAKsRh1PDvvIeQG8v4xSu0brG/fiRRQDyKBeStUmw==
