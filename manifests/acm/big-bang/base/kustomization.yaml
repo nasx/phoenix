@@ -2,8 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+  - cluster-placement-rule-sanctuary.yaml
   - cluster-placement-rule-temple.yaml
   - cluster-subscription-phoenix.yaml
   - cluster-subscription-temple.yaml
+  - cluster-subscription-sanctuary.yaml
   - fleet-wide-subscription.yaml
   - placement-rule.yaml

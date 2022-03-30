@@ -1,0 +1,15 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  name: cluster-sanctuary
+  namespace: umbrella-gitops
+  annotations:
+      apps.open-cluster-management.io/git-branch: main
+      apps.open-cluster-management.io/github-path: manifests/acm/clusters/sanctuary
+      apps.open-cluster-management.io/reconcile-option: merge
+spec:
+  channel: umbrella-gitops/umbrella-gitops
+  placement:
+    placementRef:
+      name: big-bang-placement-rule
+      kind: PlacementRule

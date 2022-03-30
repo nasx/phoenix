@@ -1,0 +1,77 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: sanctuary-ingress-controller
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: sanctuary-wildcard-cert
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: bitnami.com/v1alpha1
+              kind: SealedSecret
+              metadata:
+                creationTimestamp: null
+                name: wildcard-cert
+                namespace: openshift-ingress
+              spec:
+                encryptedData:
+                  tls.crt: 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
+                  tls.key: AgBAykVqWQo9y+EIUQIBMBSfGWRhbHZ4nUUPAB53xCkfljPmlzOSrCf3XlUW9B4y8+GO/Lvmo8TS6EJ9gFGmld3IKPYRM2ozysFR1v6JXmukTjUk0bYaYDhX7E/hR228B4QLvQ129dr+k0ey8w6dLHs7Y3A++zgbLv1K3/YgeIY+SWxDxRXTxI6AYXRskkDOj8s2Wm/qoaTNneimyO0NfA3CIxxH9HiSkhBNNP16bSSOaVxed7E2Wg3ecRMZyx0B/gaGw0ZjVSPQwZkw5Dw0ZWQjyhLiAVyncRzQ5dDevY7EbfJTw2M2rkZI28OdkekS+rwI90+yHMXXW2fB76inQMN5npl/agEjb5HHXBoPJB4H0G9V+LprQpDcDO8AqeZTjCzDLmqr/f+1vfa1FCaTA2dk3G1um7ALVBbZiZ34A0p9qA5+A8LUzMndgDlfr/FijGxwfqoc3iEaL42ZFE1ywSl+Eecp1BB9tBDRnnBojY1uSGPGAXaJ7eiDqURJ2XMMxIp5BIE0Ukk/ULmiFyNCeIpkXnolqOigI301iAwOvDXDk9yMHhJrZC9x8V2//SMekP1KsvGzbiEfOEDwB8Rrrn1q9fwBCOjktf+5fhINTHKm1F2GFR+I+mvgcWaEjBH27jKFCkfuaPTpKS2ewKaGNPDfJQEoZ12i4rJtnuL6GnHLM7DZD3+kTttF4J7yVqa3fbfRLEn5rDZ75J6ftIYTLV0VB1KWF6bo0td7SqmX8ylGQuYYz3faRF7R2htcnD6hIHeaTvE58mjPsCrp0jPPHjV9vedMMtDkWpy23YV/4LD/7ESIX9we/DOYxpQ10vD2FWcXauxk6UQspcYPuKMLUGSLUM435fLkWWBtx3Yih5w9IiyWdWOZcBKvn8CvOuq5zOyi0Y93HXgx9u8h7HoTr1156WTF9btVxBIjKKnxYHneGTQvZtgW0AfcT5ebavL/vzFW9CD7QP4mugkcWBr6ZtwU5UFHYAA14QPKXnpaEXPA3ev3HbljiGQKYNqqDumupgIKyPPI6lqRQjbRW5dk2KWpcNiCtic+ChsKEpkK2t5QuRh246eWXhRsKmgltGY9qg64sjc9Qk22KIuQlfHQ+Ey1sv5sYLOuxxT0ug4mdQSlfdvc6hWPr2Z2Bm9heJ0vnUQkqnhpGPPe9U03WnEoEdBEG9HKY/WOatuFSZuSe3Z1HJcd2/KDFV6lEW4jNnlHOamoOXnieNHJlL5gkAlgsqbwlytInQnbP/AL319oS70eGSFlNRhZ2liwKFIp368vYPk2MlhSbD5Rv6V6Urz3z5O9Pm9YDILWSHQG0Vg+rHXRU/1NK+5LOuniLLq3FVtTopzPbpAN0cKj0kftzLdsJJHEDiWtFD+UUW1aR3DR+pJLGt7R1HH+RxVro3PU+nUSCpo5IoGmadirO1JmeMImJQwQAymJKX9BDpo0Yo9pKsAkPXQc/IUvPbS7pRdkX1If7kaglcVsW2L+KDdkjWJcYSfA/cua50bvHw06UkJ3gsMufBpzTGUE64z7TG08M5KVoKvDvaNqdebXTPC54MeWx+3UUamJZwFAAW+q85U1tqIJppAMq8xvzGoyn/mGQ847MiPe/w822oikHEKqnLF3J4MWxTNqx/znClWJqkAb2+p3g6ExBMLjI6ZOWTyLWcB9B9xk9y5locPXJcyT0Yprpb8kfyCLLfIfTGjFCbjwi3RvSt5bxLrEdTHEfIiqF+PiE0uPMCRBSjkzeK4q6nIqpXSI2+dq4wSt0IdBBCE8WIbMX+6fHLZLfH4cM43Eed/Z6C2MrYkWFtOKIuXQfJgBoibaF9FZH6eb8kBfoyx8ElWpKLEIBxJt8u/LQzKRIApg5RQwqU+cRWsyi/AhQDzDzdiNWo2EcRle2h0+e2rhDZ5sro584qucBDIba8C6ESINW7KiY03btuR8IbvN893MgO2PooyW003HBJjvEX8g2XaOscmkv0k2ojIw5stPZmKQW7tVnPnfV3lplXiV+FslEot4wRaTe/yoEXM6rp9Vu42EB4ZbgwJMkyh+TjwA8MUf73mKIowz8zk0UJ4BfCRwiglZfyaHN+eTWLZWjGEkKJExaMmjLF4eJv3doS7nnjOsL2D1doV2R27/ttY0tItghNDjQgMStsTMv3PQh7TxuOpUCbNXAMp519Q78GsTteQzGVHF1c6NsKcn7TwPY1p6ak31g12d6yc31d2VNJVVp6e1G1HiXMEWwGuPNrGWg4EU3Y5h+feN7FoCZfEeui+ffjyjRdBMqCrnEZH9P+E/vAIrNJcl/obzTHlC0z+tdXdOeQXb2i4atAUf+YGzOghNCh+SO2y8sm1PcuR+eWjwQoRNDsvVay03ROWKNjnWnux92E5lWAxJiaE5UpQMkIyPWk0K3ktk0j13CUdLMkaOCtygJqn7Rc+AhH8/3oA0x+ZdnqRg1qbRRFpWU8ngL6ZAnAaRcGvkfyN0ZyXQv68IsBNU6xgQGc95Ob1D3A88rPUJLfDaP0UWjiy7TIM6IeOj4X3mMbKotuMfLyIXB0gXRmzjrmhBG73qDdZNFTI14QHJrmySTFsM2pSj4OuLvsU8WXM9itqDWuB+uo+vm8rW2pqQJDZyfSZ2sJkVXFNTfa/RNHCZY4eFoUvMNU+LgEmpZAASWUj2cE5Tim4t+Cc1QqhXfRsWnVC/12veiShU6SGf9tx7GiFagNzyJ/gP0BK53jyue1QqUxItN0487vOrIX6Ytkher2dPWSYE15gkkZDlbrOEpHVk6R7zcj2FgT5TzWVNg9H8ai7IJU6Hrii90UNzPhmCO2erWyLqPRBovki7mBm6H9UTXbnBKye+Q1PnAVEXF3iWF/vjdL3bbyAON3Hz54/Ng2ayEgUaf4hKYpBaiYx7n2cX89ba/8ft0tGSYTnL9eipWyzPlxwz+88QM0VAtsH4dAyHjxVEVNdvgk4LcIPmCLld+8HbpDBQkS6GLlGG2qX1n9p1AsyqdaHMgbt+/A0lZ5ECn7987eRd1wDjehanVDAWJxkHuoPfueo2kOBrQNAtckHY3Oq4LGR2ZiMPtxqoa//8kKIq2Xd8TiXNw8Gpvb8zyn2+yf+drFa7yT3mmY72cWgDBY9I91dCxYEnIkzgnpr8RMK9KzxpxHXXv8WPTCtYswcu3KoWSqR0oqeTqqg8GbitacdsqsZ5ggy92PcKa+yjjB9qIZAHdy6tNoIx47+WnzGsdGqlHnbkSr3ZEsIcrXhnmevRpy6lS/S5eznt5o/HFfKqqIdLXza4q/3NER9Lh75oZXG9kkHIlTzp3sbPFttNJuQRdxEoEMLtu5yIq8eNp+1G9KBa+2ou3K5IIVJAKxFflbiQoIfZrLaTFE5u76i894BG9M22cLUFl11BLCeISwB6qIBXugANv6oqT9qMQmunJv78goGTUh8pLTg/y79HCJ/6JPNO2ZTQdA9LM9kH0+1AveWYFcA5neLjZdUTb/BgFzmUp/GIgeXQybkrgNtGai/SJE0ddLqcvOMn7YjW+PZHRv9DGsqGtFG3KjPTdsfiESBRHeUZMKLGqnhqgQt7uqMm1Xu09rK3CCrVxnqX+AeBuEbkeAK5tRhHmwyBbcutKjLoa4Blk9Ku0UPhaJRg2KbqwzVaCq4WIDSqeY4ru8CBKXWkgJlWQHxc3iZdEFP3gBeXC8+o+X33NNu3ehKYCzlDFrtCMRssh3P6piuV9/pGz6yflviutcHrMCJ0eXXK4M07l4RYTJiXEHXDxQmoth1ubtK1FkGCuxbehlzyo1s5swvBFkXQCNqr41xKIPny5hEaJxt3140UiKcEasbUC+SX2GMyIQG+UGJiRwZzT+aBcJMC9coE1/lRHnEbIJVmEBlk32x9FWHcmMWn7UnnHykdd1I/2ElKkjkaEIKqHEciD2ATBj2ZeXcMdIe9hnSIsqU5qVwf972qrG1EOmN15zZaYjWqd4TJUHZGp9MYrO3i+uhxhyjD2wOz0MRqaMFJXuvOEyPUWZHN08PY4x+gUo6jBKJ2OBHjLHH5paDj+hdz17RNFZRVW2YjxmiBvv9qj4kKNAgJyaV46L9h9wHdPPGUdmOJ7QXiK6tm8OdlXrTX5JA7/njTn2Ab6IK57GP9G+eAsDGwtbkL4uYHb3Lg9FpADXTgyl6C64y71lsZCtf7E9WM+kP/0XzpwPI9xDNYEXWs1GEsJH10Yg2/utSurGWEtWsQjwXb1TmAIO4PrXqxMhWUkRDmOiEU1jTpDiwFydUmDgYosR/G2g8GAScHM4eeeUWn0vP0NOHcYFYf3OdbCq3e13DHwfC954cYK4ck3t87Jy9JlHRzs1RQIM5qsxjIVeqv4gatjx3a1d9I52I3xJZrwyYSFgd4+7U0SeN+25JOGe9ITyMr5vOMfcV8Ah73G+HPBVSjc5UdKi161c6mmFO3x8DxCKUAuzP1RN/bth8Z69SsI+5jIqr5w1RyoVhAOwp6FTtfz425NnYvRqojj8KsMPKpwLqWbWFU94sLXtUYJYzJenE4tio4ZuUYW7nb1zLBFDJZxCGsuc8RkPwJDBBBs1oI9I1JlwN5AFWi9ygRdo7MbudiQYFrJJ6ufT6owBXOSzu/GUhr2WWbxzFKVP6WPEndmXyZ7C53ksCVkWQdqnHowpbR83O3gVquVEjUrNGM2UlWW6/sA0WINLZQ9jsCntx7AcThtTc/R3zqom55QOOpJ9tfrTd/Wq1eh0WmuXoGdI5wdQ4Q1278fHug6HHQwsjkJ1BtZubIHVRmivrBPeFDituARrdjA1sgeBfhnuIzRI1g+TGZBMnO0xejrGrRsPvordNd+tauADiGFFPBpD4HqEHOPGPskPZlRzsYR+pH8eD2dH3QaqGtwrf5Opctr/R8immfjFCxC+oiOmsLPn2nJMkTHk6afuZ9NlCCYDwBthXozHibASAX5o7Xp3GgICrlawNeaBZAaP6wqF2DLeaIGLKuKTt1mbFQW0Uf2Gn2LRGm5pJDl08DERVb0msb99IWTbcx9VjifSc3z32EIbAEtnCD6TV9leh+zSY1m29blquqypGZjRMKzzOKi4Tfr1Vsat+FmGT5BkeuY6K4pVU=
+                template:
+                  metadata:
+                    creationTimestamp: null
+                    name: wildcard-cert
+                    namespace: openshift-ingress
+                  type: kubernetes.io/tls
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: default-ingress-controller-config
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: operator.openshift.io/v1
+              kind: IngressController
+              metadata:
+                name: default
+                namespace: openshift-ingress-operator
+              spec:
+                defaultCertificate:
+                  name: wildcard-cert
+                httpErrorCodePages:
+                  name: ""
+                replicas: 3
+                tuningOptions: {}
+                unsupportedConfigOverrides: null
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: sanctuary-ingress-controller
+  namespace: umbrella-gitops
+placementRef:
+  name: cluster-placement-rule-sanctuary
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: sanctuary-ingress-controller
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
