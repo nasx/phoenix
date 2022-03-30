@@ -32,8 +32,14 @@ spec:
                     zones:
                       - lab.uc2.io
                     forwardPlugin:
-                      upstreams: 
+                      upstreams:
                         - 172.16.10.2
+                  - name: umbrella-local
+                    zones:
+                      - umbrella.local
+                    forwardPlugin:
+                      upstreams:
+                        - 172.16.10.11
                   upstreamResolvers:
                     policy: Sequential
                     upstreams:
