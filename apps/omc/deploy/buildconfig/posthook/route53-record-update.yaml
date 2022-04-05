@@ -1,0 +1,10 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: acm-cluster-pre-hook-debug
+  namespace: umbrella-gitops
+  labels:
+    app.kubernetes.io/name: omc-app
+spec:
+  tower_auth_secret: dark-tower
+  job_template_name: acm-cluster-pre-hook-debug
