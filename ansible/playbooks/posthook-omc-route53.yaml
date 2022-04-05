@@ -1,0 +1,4 @@
+- name: Update OMC Route53 Record
+  hosts: localhost
+  roles:
+    - role: posthook-omc-route53

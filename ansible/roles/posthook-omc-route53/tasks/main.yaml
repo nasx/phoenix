@@ -1,0 +1,25 @@
+- name: Make Sure target_clusters is Defined
+  ansible.builtin.assert:
+    fail_msg: "It appears ACM did not pass target_clusters as an extra var or target_clusters is not a list!"
+    that:
+      - target_clusters is defined
+      - target_clusters | type_debug == "list"
+
+- name: Debug target_clusters
+  ansible.builtin.debug:
+    var: target_clusters
+
+- name: Build List of IPs
+  ansible.builtin.set_fact:
+    ingress_ips: "{{ ingress_ips | default([]) + [ lookup('community.general.dig', 'fake.apps.' + item + '.' + base_domain).split(',')[0] ] }}"
+  loop: "{{ target_clusters }}"
+
+- name: Update Application A Record in Route53
+  community.aws.route53:
+    overwrite: yes
+    record: "{{ route53_app_record }}.{{ route53_app_zone }}"
+    state: create
+    ttl: 10
+    type: A
+    value: "{{ ingress_ips }}"
+    zone: "{{ route53_app_zone }}"
